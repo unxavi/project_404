@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/colorPrimaryLight" />
+
+    <item
+        android:drawable="@drawable/ic_access_time_96"
+        android:gravity="center" />
+</layer-list>
