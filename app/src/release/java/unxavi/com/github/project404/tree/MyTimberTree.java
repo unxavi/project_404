@@ -1,4 +1,4 @@
-package unxavi.com.github.project404.app.trees;
+package unxavi.com.github.project404.tree;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -6,7 +6,7 @@ import android.util.Log;
 import timber.log.Timber;
 
 
-public class ReleaseTree extends Timber.Tree {
+public class MyTimberTree extends Timber.Tree {
     @Override
     protected void log(int priority, String tag, @NonNull String message, Throwable t) {
 
