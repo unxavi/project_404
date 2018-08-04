@@ -21,7 +21,23 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v13:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.google.firebase:firebase-firestore:17.0.1'
+    implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
+    implementation 'com.google.firebase:firebase-auth:16.0.1'
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+    implementation('io.nlopez.smartlocation:library:3.3.3') {
+        transitive = false
+    }
+    implementation "com.github.hotchemi:permissionsdispatcher:3.3.1"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.3.1"
+    //todo add crashlitycs
+    implementation 'com.hannesdorfmann.mosby3:mvp:3.1.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
