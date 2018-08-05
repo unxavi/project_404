@@ -9,4 +9,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_deletetimelog_list">DeleteTimeLogs</string>
     <string name="title_deletetimelog_detail">DeleteTimeLog Detail</string>
+    <string name="network_error_anonymous_first_time">Make sure you have internet to use the application the first time</string>
 </resources>
