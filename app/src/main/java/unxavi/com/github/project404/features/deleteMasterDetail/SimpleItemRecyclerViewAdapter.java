@@ -13,8 +13,8 @@ import java.util.List;
 
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.deleteMasterDetail.dummy.DummyContent;
-import unxavi.com.github.project404.features.main.WorkLogDetailActivity;
-import unxavi.com.github.project404.features.main.WorkLogDetailFragment;
+import unxavi.com.github.project404.features.main.detail.WorkLogDetailActivity;
+import unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment;
 
 public class SimpleItemRecyclerViewAdapter
         extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {

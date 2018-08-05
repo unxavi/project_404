@@ -1,4 +1,4 @@
-package unxavi.com.github.project404.features.main;
+package unxavi.com.github.project404.features.main.detail;
 
 import android.content.Intent;
 import android.os.Bundle;

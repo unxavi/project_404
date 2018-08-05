@@ -29,7 +29,7 @@
             android:label="@string/title_deletetimelog_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".features.main.WorkLogDetailActivity"
+            android:name=".features.main.detail.WorkLogDetailActivity"
             android:label="@string/title_deletetimelog_detail"
             android:parentActivityName=".features.deleteMasterDetail.DeleteTimeLogListActivity"
             android:theme="@style/AppTheme.NoActionBar">

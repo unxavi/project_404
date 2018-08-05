@@ -1,4 +1,4 @@
-package unxavi.com.github.project404.features.main;
+package unxavi.com.github.project404.features.main.detail;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.deleteMasterDetail.dummy.DummyContent;
+import unxavi.com.github.project404.features.main.MainActivity;
 
 /**
  * A fragment representing a single DeleteTimeLog detail screen.

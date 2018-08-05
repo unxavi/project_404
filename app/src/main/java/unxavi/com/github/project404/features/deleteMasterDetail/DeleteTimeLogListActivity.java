@@ -11,7 +11,7 @@ import android.view.View;
 
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.deleteMasterDetail.dummy.DummyContent;
-import unxavi.com.github.project404.features.main.WorkLogDetailActivity;
+import unxavi.com.github.project404.features.main.detail.WorkLogDetailActivity;
 
 /**
  * An activity representing a list of DeleteTimeLogs. This activity
