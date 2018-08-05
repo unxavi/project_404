@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.Group;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
@@ -31,6 +33,9 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @BindView(R.id.work_log_recyclerview)
     RecyclerView workLogRecyclerView;
+
+    @BindView(R.id.group_empty)
+    Group groupEmpty;
 
     private WorkLogAdapter adapter;
 
@@ -156,7 +161,11 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @Override
     public void isListEmpty(boolean isEmpty) {
-
+        if (isEmpty) {
+            groupEmpty.setVisibility(View.VISIBLE);
+        } else {
+            groupEmpty.setVisibility(View.GONE);
+        }
     }
 
     @Override
