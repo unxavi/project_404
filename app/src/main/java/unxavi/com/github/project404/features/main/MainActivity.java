@@ -8,16 +8,18 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends MvpActivity<MainActivityView, MainActivityPresenter>
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MainActivityView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -91,5 +93,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @NonNull
+    @Override
+    public MainActivityPresenter createPresenter() {
+        return new MainActivityPresenter();
     }
 }
