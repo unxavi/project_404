@@ -8,21 +8,31 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.model.WorkLog;
 
 public class MainActivity extends MvpActivity<MainActivityView, MainActivityPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
-        MainActivityView {
+        MainActivityView, WorkLogAdapter.WorkLogInterface {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.work_log_recyclerview)
+    RecyclerView workLogRecyclerView;
+
+    private WorkLogAdapter adapter;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -58,6 +68,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+        setupRecyclerView();
     }
 
     @Override
@@ -99,5 +110,62 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     public MainActivityPresenter createPresenter() {
         return new MainActivityPresenter();
+    }
+
+    private void setupRecyclerView() {
+        Query workLogsQuery = presenter.getWorkLogs();
+        if (workLogsQuery != null) {
+            // Configure recycler adapter options:
+            FirestoreRecyclerOptions<WorkLog> options = new FirestoreRecyclerOptions.Builder<WorkLog>()
+                    .setQuery(workLogsQuery, WorkLog.class)
+                    .build();
+
+            adapter = new WorkLogAdapter(options, this);
+            workLogRecyclerView.hasFixedSize();
+            workLogRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+            workLogRecyclerView.setAdapter(adapter);
+        } else {
+            closeOnError();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.startListening();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.stopListening();
+        }
+    }
+
+    private void closeOnError() {
+        // TODO: 8/5/18
+    }
+
+    @Override
+    public void onItemClick(WorkLog workLog) {
+
+    }
+
+    @Override
+    public void isListEmpty(boolean isEmpty) {
+
+    }
+
+    @Override
+    public void showEmptyView() {
+
+    }
+
+    @Override
+    public void showWorkLogsList() {
+
     }
 }

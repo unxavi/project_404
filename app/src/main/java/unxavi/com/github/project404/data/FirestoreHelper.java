@@ -1,7 +1,14 @@
 package unxavi.com.github.project404.data;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
+
+import unxavi.com.github.project404.auth.AuthHelper;
+import unxavi.com.github.project404.model.User;
+import unxavi.com.github.project404.model.WorkLog;
 
 public class FirestoreHelper {
 
@@ -22,6 +29,18 @@ public class FirestoreHelper {
                 .setPersistenceEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
+    }
+
+    @Nullable
+    public Query getUserWorkLogs() {
+        if (AuthHelper.getInstance().isUserSignedIn()) {
+            return db.collection(User.COLLECTION)
+                    .document(AuthHelper.getInstance().getCurrentUser().getUid())
+                    .collection(WorkLog.COLLECTION)
+                    .orderBy(WorkLog.FIELD_DATE, Query.Direction.DESCENDING);
+        } else {
+            return null;
+        }
     }
 
 

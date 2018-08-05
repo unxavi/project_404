@@ -55,7 +55,7 @@ public class DeleteTimeLogListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.deletetimelog_list);
+        View recyclerView = findViewById(R.id.work_log_recyclerview);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
