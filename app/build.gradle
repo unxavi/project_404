@@ -31,6 +31,9 @@ dependencies {
         transitive = false
     }
     implementation "com.github.hotchemi:permissionsdispatcher:3.3.1"
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.3.1"
     //todo add crashlitycs
     implementation 'com.hannesdorfmann.mosby3:mvp:3.1.0'

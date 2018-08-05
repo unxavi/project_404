@@ -24,6 +24,19 @@
             android:name=".features.main.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".features.deleteMasterDetail.DeleteTimeLogListActivity"
+            android:label="@string/title_deletetimelog_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".features.main.WorkLogDetailActivity"
+            android:label="@string/title_deletetimelog_detail"
+            android:parentActivityName=".features.deleteMasterDetail.DeleteTimeLogListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity" />
+        </activity>
     </application>
 
 </manifest>
