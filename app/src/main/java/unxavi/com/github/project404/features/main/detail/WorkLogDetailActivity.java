@@ -61,7 +61,7 @@ public class WorkLogDetailActivity extends AppCompatActivity {
             WorkLogDetailFragment fragment = new WorkLogDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.deletetimelog_detail_container, fragment)
+                    .add(R.id.work_log_detail_container, fragment)
                     .commit();
         }
     }

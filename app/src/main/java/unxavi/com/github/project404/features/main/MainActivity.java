@@ -61,7 +61,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (findViewById(R.id.deletetimelog_detail_container) != null) {
+        if (findViewById(R.id.work_log_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the

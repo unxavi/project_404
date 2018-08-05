@@ -31,7 +31,7 @@ public class SimpleItemRecyclerViewAdapter
                 WorkLogDetailFragment fragment = new WorkLogDetailFragment();
                 fragment.setArguments(arguments);
                 mParentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.deletetimelog_detail_container, fragment)
+                        .replace(R.id.work_log_detail_container, fragment)
                         .commit();
             } else {
                 Context context = view.getContext();
