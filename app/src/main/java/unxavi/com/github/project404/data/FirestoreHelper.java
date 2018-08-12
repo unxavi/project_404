@@ -22,6 +22,10 @@ public class FirestoreHelper {
         void taskCreated(Task task);
     }
 
+    public interface AddWorkLog {
+        void workLogCreated(WorkLog workLog);
+    }
+
     private static FirestoreHelper ourInstance;
 
     private final FirebaseFirestore db;
@@ -100,6 +104,28 @@ public class FirestoreHelper {
                     });
         }
 
+    }
+
+    public void addUserWorkLog(final WorkLog workLog, final AddWorkLog listener) {
+        if (AuthHelper.getInstance().isUserSignedIn()) {
+            db.collection(User.COLLECTION)
+                    .document(AuthHelper.getInstance().getCurrentUser().getUid())
+                    .collection(WorkLog.COLLECTION)
+                    .document()
+                    .set(workLog, SetOptions.merge())
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.e(e);
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            listener.workLogCreated(workLog);
+                        }
+                    });
+        }
     }
 
 

@@ -27,6 +27,13 @@ public class WorkLog {
     public WorkLog() {
     }
 
+    public WorkLog(int action, Task task) {
+        this.action = action;
+        this.task = task;
+    }
+
+    // TODO: 8/12/18 add location
+
     public int getAction() {
         return action;
     }

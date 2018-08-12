@@ -43,7 +43,7 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
     protected void onBindViewHolder(@NonNull WalletHolder holder, int position, @NonNull WorkLog model) {
         WorkLog workLog = getItem(position);
         holder.data = workLog;
-        holder.contentTV.setText(workLog.getTimestamp().toString());
+        holder.contentTV.setText(workLog.getTask().getName());
     }
 
     @NonNull

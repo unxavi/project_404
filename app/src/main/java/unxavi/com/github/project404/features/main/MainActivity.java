@@ -72,6 +72,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     CoordinatorLayout rootView;
 
     private WorkLogAdapter adapter;
+    private WorkLog workLog;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -221,10 +222,13 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                 tasksDialogFragment.show(getSupportFragmentManager(), "TasksDialogFragment");
                 break;
             case R.id.fab_stop:
+                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_STOP);
                 break;
             case R.id.fab_return:
+                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_RETURN);
                 break;
             case R.id.fab_pause:
+                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_PAUSE);
                 break;
         }
     }
@@ -275,6 +279,8 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         Query lastWorkLogQuery = presenter.getLastWorkLogQuery();
         if (lastWorkLogQuery != null) {
             lastWorkLogQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                public WorkLog workLog;
+
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if (e != null) {
@@ -289,6 +295,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                                     Timber.e(exception);
                                 }
                             }
+                            MainActivity.this.workLog = workLog;
                             renderFabButtonsFlow(workLog);
                         } else {
                             Timber.e(new RuntimeException("Firestore last work log document snapshot is null"));
@@ -320,8 +327,8 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                 if (data != null) {
                     Task task = data.getParcelableExtra(AddTaskActivity.TASK_CREATED);
                     if (task != null) {
-                        // TODO: 8/12/18 create workLog
                         Snackbar.make(rootView, R.string.task_created, Snackbar.LENGTH_LONG).show();
+                        presenter.createWorkLog(task, WorkLog.ACTION_START);
                     } else {
                         Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
                     }
