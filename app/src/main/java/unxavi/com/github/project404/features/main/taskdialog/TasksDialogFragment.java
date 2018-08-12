@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +88,6 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
 
             adapter = new TaskAdapter(options, this);
             list.hasFixedSize();
-            list.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
             list.setAdapter(adapter);
         }
     }
@@ -110,7 +108,11 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
 
     @Override
     public void onTaskClick(Task task) {
-        listener.onTaskSelected(task);
+        try {
+            dismiss();
+        }finally {
+            listener.onTaskSelected(task);
+        }
     }
 
     @OnClick({R.id.addTaskIV, R.id.addTaskTv})

@@ -311,7 +311,11 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @Override
     public void onTaskSelected(Task task) {
+        createStartWorkLog(task);
+    }
 
+    private void createStartWorkLog(Task task) {
+        presenter.createWorkLog(task, WorkLog.ACTION_START);
     }
 
     @Override
@@ -328,7 +332,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                     Task task = data.getParcelableExtra(AddTaskActivity.TASK_CREATED);
                     if (task != null) {
                         Snackbar.make(rootView, R.string.task_created, Snackbar.LENGTH_LONG).show();
-                        presenter.createWorkLog(task, WorkLog.ACTION_START);
+                        createStartWorkLog(task);
                     } else {
                         Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
                     }
