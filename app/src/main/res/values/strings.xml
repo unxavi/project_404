@@ -12,4 +12,5 @@
     <string name="network_error_anonymous_first_time">Make sure you have internet to use the application the first time</string>
     <string name="empty_work_logs_message">You haven\'t log any time yet</string>
     <string name="empty_worklogs_content_description">Empty work logs icon</string>
+    <string name="choose_task_dialog_title">Choose Task</string>
 </resources>

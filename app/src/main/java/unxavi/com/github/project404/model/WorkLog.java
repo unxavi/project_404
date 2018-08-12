@@ -19,6 +19,8 @@ public class WorkLog {
 
     private int action;
 
+    private Task task;
+
     private @ServerTimestamp
     Date timestamp;
 
@@ -29,15 +31,12 @@ public class WorkLog {
         return action;
     }
 
-    public void setAction(int action) {
-        this.action = action;
+    public Task getTask() {
+        return task;
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
 }

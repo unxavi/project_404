@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import unxavi.com.github.project404.auth.AuthHelper;
+import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.User;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -51,6 +52,18 @@ public class FirestoreHelper {
                     .collection(WorkLog.COLLECTION)
                     .orderBy(WorkLog.FIELD_DATE, Query.Direction.DESCENDING)
                     .limit(1);
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    public Query getUserTasksQuery() {
+        if (AuthHelper.getInstance().isUserSignedIn()) {
+            return db.collection(User.COLLECTION)
+                    .document(AuthHelper.getInstance().getCurrentUser().getUid())
+                    .collection(Task.COLLECTION)
+                    .orderBy(Task.FIELD_NAME_LOWERCASE, Query.Direction.ASCENDING);
         } else {
             return null;
         }

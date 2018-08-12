@@ -30,11 +30,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
+import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
 
 public class MainActivity extends MvpActivity<MainActivityView, MainActivityPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
-        MainActivityView, WorkLogAdapter.WorkLogInterface {
+        MainActivityView,
+        WorkLogAdapter.WorkLogInterface,
+        TasksDialogFragment.TaskSelectDialogListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -206,6 +210,8 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fab_start:
+                TasksDialogFragment tasksDialogFragment = TasksDialogFragment.newInstance();
+                tasksDialogFragment.show(getSupportFragmentManager(), "TasksDialogFragment");
                 break;
             case R.id.fab_stop:
                 break;
@@ -222,7 +228,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             switch (lastWorkLog.getAction()) {
                 case WorkLog.ACTION_START:
                 case WorkLog.ACTION_RETURN:
-                    renderFauseStopFab();
+                    renderPauseStopFab();
                     break;
                 case WorkLog.ACTION_PAUSE:
                     renderReturnFab();
@@ -237,7 +243,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     }
 
-    private void renderFauseStopFab() {
+    private void renderPauseStopFab() {
         fabStart.setVisibility(View.INVISIBLE);
         fabReturn.setVisibility(View.INVISIBLE);
         fabPause.setVisibility(View.VISIBLE);
@@ -286,6 +292,11 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         } else {
             renderFabButtonsFlow(null);
         }
+
+    }
+
+    @Override
+    public void onTaskSelected(Task task) {
 
     }
 }
