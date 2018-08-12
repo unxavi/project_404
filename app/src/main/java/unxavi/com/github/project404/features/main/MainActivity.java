@@ -162,19 +162,20 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     public void isListEmpty(boolean isEmpty) {
         if (isEmpty) {
-            groupEmpty.setVisibility(View.VISIBLE);
+            showEmptyView();
         } else {
-            groupEmpty.setVisibility(View.GONE);
+            showWorkLogsList();
         }
     }
 
     @Override
     public void showEmptyView() {
+        groupEmpty.setVisibility(View.VISIBLE);
 
     }
 
     @Override
     public void showWorkLogsList() {
-
+        groupEmpty.setVisibility(View.GONE);
     }
 }
