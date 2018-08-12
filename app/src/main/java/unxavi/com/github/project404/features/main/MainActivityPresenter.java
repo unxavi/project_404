@@ -15,4 +15,9 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
         return FirestoreHelper.getInstance().getUserWorkLogs();
     }
 
+    @Nullable
+    public Query getLastWorkLogQuery() {
+        return FirestoreHelper.getInstance().getLastUserWorkLog();
+    }
+
 }

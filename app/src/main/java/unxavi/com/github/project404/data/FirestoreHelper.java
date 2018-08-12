@@ -43,5 +43,18 @@ public class FirestoreHelper {
         }
     }
 
+    @Nullable
+    public Query getLastUserWorkLog() {
+        if (AuthHelper.getInstance().isUserSignedIn()) {
+            return db.collection(User.COLLECTION)
+                    .document(AuthHelper.getInstance().getCurrentUser().getUid())
+                    .collection(WorkLog.COLLECTION)
+                    .orderBy(WorkLog.FIELD_DATE, Query.Direction.DESCENDING)
+                    .limit(1);
+        } else {
+            return null;
+        }
+    }
+
 
 }

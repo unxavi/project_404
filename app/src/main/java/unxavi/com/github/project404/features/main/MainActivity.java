@@ -18,12 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -91,6 +96,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             mTwoPane = true;
         }
         setupRecyclerView();
+        prepareLastWorkLogListener();
     }
 
     @Override
@@ -210,9 +216,10 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         }
     }
 
-    private void renderFabButtonsFlow(@Nullable WorkLog lastWorkLog){
+    @Override
+    public void renderFabButtonsFlow(@Nullable WorkLog lastWorkLog) {
         if (lastWorkLog != null) {
-            switch (lastWorkLog.getAction()){
+            switch (lastWorkLog.getAction()) {
                 case WorkLog.ACTION_START:
                 case WorkLog.ACTION_RETURN:
                     renderFauseStopFab();
@@ -249,5 +256,36 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         fabStop.setVisibility(View.INVISIBLE);
         fabReturn.setVisibility(View.INVISIBLE);
         fabStart.setVisibility(View.VISIBLE);
+    }
+
+    private void prepareLastWorkLogListener() {
+        Query lastWorkLogQuery = presenter.getLastWorkLogQuery();
+        if (lastWorkLogQuery != null) {
+            lastWorkLogQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Timber.e(e);
+                    } else {
+                        if (queryDocumentSnapshots != null) {
+                            WorkLog workLog = null;
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                try {
+                                    workLog = document.toObject(WorkLog.class);
+                                } catch (Exception exception) {
+                                    Timber.e(exception);
+                                }
+                            }
+                            renderFabButtonsFlow(workLog);
+                        } else {
+                            Timber.e(new RuntimeException("Firestore last work log document snapshot is null"));
+                        }
+                    }
+                }
+            });
+        } else {
+            renderFabButtonsFlow(null);
+        }
+
     }
 }
