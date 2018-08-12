@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.Group;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +22,7 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -36,6 +38,21 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @BindView(R.id.group_empty)
     Group groupEmpty;
+
+    @BindView(R.id.fab_start)
+    FloatingActionButton fabStart;
+
+    @BindView(R.id.fab_stop)
+    FloatingActionButton fabStop;
+
+    @BindView(R.id.fab_return)
+    FloatingActionButton fabReturn;
+
+    @BindView(R.id.fab_pause)
+    FloatingActionButton fabPause;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
 
     private WorkLogAdapter adapter;
 
@@ -57,10 +74,9 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -177,5 +193,19 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     public void showWorkLogsList() {
         groupEmpty.setVisibility(View.GONE);
+    }
+
+    @OnClick({R.id.fab_start, R.id.fab_stop, R.id.fab_return, R.id.fab_pause})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.fab_start:
+                break;
+            case R.id.fab_stop:
+                break;
+            case R.id.fab_return:
+                break;
+            case R.id.fab_pause:
+                break;
+        }
     }
 }
