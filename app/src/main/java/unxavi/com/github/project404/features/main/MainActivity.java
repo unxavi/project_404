@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -207,5 +208,46 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             case R.id.fab_pause:
                 break;
         }
+    }
+
+    private void renderFabButtonsFlow(@Nullable WorkLog lastWorkLog){
+        if (lastWorkLog != null) {
+            switch (lastWorkLog.getAction()){
+                case WorkLog.ACTION_START:
+                case WorkLog.ACTION_RETURN:
+                    renderFauseStopFab();
+                    break;
+                case WorkLog.ACTION_PAUSE:
+                    renderReturnFab();
+                    break;
+                case WorkLog.ACTION_STOP:
+                    renderStartFab();
+                    break;
+            }
+        } else {
+            renderStartFab();
+        }
+
+    }
+
+    private void renderFauseStopFab() {
+        fabStart.setVisibility(View.INVISIBLE);
+        fabReturn.setVisibility(View.INVISIBLE);
+        fabPause.setVisibility(View.VISIBLE);
+        fabStop.setVisibility(View.VISIBLE);
+    }
+
+    private void renderReturnFab() {
+        fabStart.setVisibility(View.INVISIBLE);
+        fabPause.setVisibility(View.INVISIBLE);
+        fabStop.setVisibility(View.INVISIBLE);
+        fabReturn.setVisibility(View.VISIBLE);
+    }
+
+    private void renderStartFab() {
+        fabPause.setVisibility(View.INVISIBLE);
+        fabStop.setVisibility(View.INVISIBLE);
+        fabReturn.setVisibility(View.INVISIBLE);
+        fabStart.setVisibility(View.VISIBLE);
     }
 }
