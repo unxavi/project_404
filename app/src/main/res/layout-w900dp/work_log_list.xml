@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--todo change to constraint layput-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
-    android:orientation="horizontal"
     android:showDividers="middle"
     tools:context=".features.deleteMasterDetail.DeleteTimeLogListActivity">
 
@@ -18,32 +13,30 @@
     master/detail flow.
     
     -->
+    <include layout="@layout/empty_view_worklogs" />
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/work_log_recyclerview"
+        android:name="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginRight="16dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity"
+        tools:listitem="@layout/work_log_item" />
 
-        <include layout="@layout/empty_view_worklogs" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/work_log_recyclerview"
-            android:name="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListFragment"
-            android:layout_width="@dimen/item_width"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:context="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity"
-            tools:listitem="@layout/work_log_item" />
-
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/work_log_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/work_log_recyclerview"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
