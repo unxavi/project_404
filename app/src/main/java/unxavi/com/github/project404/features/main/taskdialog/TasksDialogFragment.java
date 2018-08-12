@@ -21,7 +21,7 @@ import butterknife.Unbinder;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.data.FirestoreHelper;
-import unxavi.com.github.project404.features.main.adapter.TaskAdapter;
+import unxavi.com.github.project404.adapter.TaskAdapter;
 import unxavi.com.github.project404.model.Task;
 
 public class TasksDialogFragment extends DialogFragment implements TaskAdapter.WalletListInterface {
