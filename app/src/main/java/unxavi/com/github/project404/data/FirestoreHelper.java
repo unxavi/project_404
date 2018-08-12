@@ -1,17 +1,26 @@
 package unxavi.com.github.project404.data;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.SetOptions;
 
+import timber.log.Timber;
 import unxavi.com.github.project404.auth.AuthHelper;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.User;
 import unxavi.com.github.project404.model.WorkLog;
 
 public class FirestoreHelper {
+
+    public interface AddTaskListener {
+        void taskCreated(Task task);
+    }
 
     private static FirestoreHelper ourInstance;
 
@@ -67,6 +76,30 @@ public class FirestoreHelper {
         } else {
             return null;
         }
+    }
+
+
+    public void addUserTask(final Task task, final AddTaskListener listener) {
+        if (AuthHelper.getInstance().isUserSignedIn()) {
+            db.collection(User.COLLECTION)
+                    .document(AuthHelper.getInstance().getCurrentUser().getUid())
+                    .collection(Task.COLLECTION)
+                    .document()
+                    .set(task, SetOptions.merge())
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.e(e);
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            listener.taskCreated(task);
+                        }
+                    });
+        }
+
     }
 
 

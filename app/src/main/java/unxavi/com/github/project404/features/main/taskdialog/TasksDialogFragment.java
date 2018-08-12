@@ -20,8 +20,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
-import unxavi.com.github.project404.data.FirestoreHelper;
 import unxavi.com.github.project404.adapter.TaskAdapter;
+import unxavi.com.github.project404.data.FirestoreHelper;
 import unxavi.com.github.project404.model.Task;
 
 public class TasksDialogFragment extends DialogFragment implements TaskAdapter.WalletListInterface {
@@ -36,11 +36,12 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
 
     public interface TaskSelectDialogListener {
         void onTaskSelected(Task task);
+
+        void newTaskSelected();
     }
 
     public static TasksDialogFragment newInstance() {
-        TasksDialogFragment fragment = new TasksDialogFragment();
-        return fragment;
+        return new TasksDialogFragment();
     }
 
     @NonNull
@@ -107,7 +108,6 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
     }
 
 
-
     @Override
     public void onTaskClick(Task task) {
         listener.onTaskSelected(task);
@@ -118,6 +118,11 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
         switch (view.getId()) {
             case R.id.addTaskIV:
             case R.id.addTaskTv:
+                try {
+                    dismiss();
+                }finally {
+                    listener.newTaskSelected();
+                }
                 break;
         }
     }

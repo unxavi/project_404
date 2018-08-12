@@ -15,4 +15,11 @@
     <string name="choose_task_dialog_title">Choose Task</string>
     <string name="add_tasks">Add tasks</string>
     <string name="add_task_icon_content_description">add task icon</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
+    <string name="save">Save</string>
+    <string name="task_name_hint">Task name</string>
+    <string name="field_required">Field is required</string>
+    <string name="task_created">Task created</string>
+    <string name="no_task_created">No task created</string>
+
 </resources>

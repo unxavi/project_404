@@ -27,7 +27,7 @@
         <activity
             android:name=".features.deleteMasterDetail.DeleteTimeLogListActivity"
             android:label="@string/title_deletetimelog_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".features.main.detail.WorkLogDetailActivity"
             android:label="@string/title_deletetimelog_detail"
@@ -37,6 +37,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity" />
         </activity>
+        <activity
+            android:name=".features.task.AddTaskActivity"
+            android:label="@string/title_activity_add_task"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

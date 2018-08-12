@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -31,6 +34,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
+import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -63,6 +67,9 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    
+    @BindView(R.id.rootView)
+    CoordinatorLayout rootView;
 
     private WorkLogAdapter adapter;
 
@@ -298,5 +305,32 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     public void onTaskSelected(Task task) {
 
+    }
+
+    @Override
+    public void newTaskSelected() {
+        Intent intent = new Intent(this, AddTaskActivity.class);
+        startActivityForResult(intent, AddTaskActivity.RC_ADD_TASK);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AddTaskActivity.RC_ADD_TASK) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Task task = data.getParcelableExtra(AddTaskActivity.TASK_CREATED);
+                    if (task != null) {
+                        // TODO: 8/12/18 create workLog
+                        Snackbar.make(rootView, R.string.task_created, Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
