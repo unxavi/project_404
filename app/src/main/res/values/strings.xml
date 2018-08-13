@@ -21,5 +21,6 @@
     <string name="field_required">Field is required</string>
     <string name="task_created">Task created</string>
     <string name="no_task_created">No task created</string>
+    <string name="action_done_icon_content_description">Action done icon</string>
 
 </resources>

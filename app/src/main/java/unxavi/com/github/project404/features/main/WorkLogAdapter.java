@@ -5,11 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -43,7 +46,25 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
     protected void onBindViewHolder(@NonNull WalletHolder holder, int position, @NonNull WorkLog model) {
         WorkLog workLog = getItem(position);
         holder.data = workLog;
-        holder.contentTV.setText(workLog.getTask().getName());
+        holder.date.setText("");
+        holder.task.setText(workLog.getTask().getName());
+        switch (workLog.getAction()){
+            case WorkLog.ACTION_START:
+                holder.actionIv.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                break;
+            case WorkLog.ACTION_PAUSE:
+                holder.actionIv.setImageResource(R.drawable.ic_pause_black_24dp);
+                break;
+            case WorkLog.ACTION_RETURN:
+                holder.actionIv.setImageResource(R.drawable.ic_replay_black_24dp);
+                break;
+            case WorkLog.ACTION_STOP:
+                holder.actionIv.setImageResource(R.drawable.ic_stop_black_24dp);
+                break;
+
+
+        }
+        holder.date.setText("");
     }
 
     @NonNull
@@ -62,7 +83,14 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
     class WalletHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public WorkLog data;
         View mView;
-        TextView contentTV;
+        @BindView(R.id.date)
+        TextView date;
+
+        @BindView(R.id.task)
+        TextView task;
+
+        @BindView(R.id.actionIv)
+        ImageView actionIv;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -71,8 +99,8 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
             // to access the context from any ViewHolder instance.
             super(itemView);
             this.mView = itemView;
-            contentTV = itemView.findViewById(R.id.content);
             this.mView.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
         @Override

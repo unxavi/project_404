@@ -8,4 +8,5 @@
     <color name="colorAccentDark">#c77c02</color>
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="list_action_item_color">#575757</color>
 </resources>
