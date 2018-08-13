@@ -160,7 +160,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                     .setQuery(workLogsQuery, WorkLog.class)
                     .build();
 
-            adapter = new WorkLogAdapter(options, this);
+            adapter = new WorkLogAdapter(options, this, this);
             workLogRecyclerView.hasFixedSize();
             workLogRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
             workLogRecyclerView.setAdapter(adapter);

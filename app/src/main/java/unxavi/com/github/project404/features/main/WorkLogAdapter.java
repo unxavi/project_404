@@ -1,5 +1,7 @@
 package unxavi.com.github.project404.features.main;
 
+import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +13,17 @@ import android.widget.TextView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.model.WorkLog;
+import unxavi.com.github.project404.utils.Utils;
 
 public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAdapter.WalletHolder> {
 
+    private final Locale locale;
     private WorkLogInterface listener;
 
     public interface WorkLogInterface {
@@ -27,9 +33,14 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
     }
 
 
-    public WorkLogAdapter(@NonNull FirestoreRecyclerOptions<WorkLog> options, WorkLogInterface listener) {
+    public WorkLogAdapter(@NonNull FirestoreRecyclerOptions<WorkLog> options, WorkLogInterface listener, Context context) {
         super(options);
         this.listener = listener;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            locale = context.getResources().getConfiguration().locale;
+        }
     }
 
     @Override
@@ -48,7 +59,7 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
         holder.data = workLog;
         holder.date.setText("");
         holder.task.setText(workLog.getTask().getName());
-        switch (workLog.getAction()){
+        switch (workLog.getAction()) {
             case WorkLog.ACTION_START:
                 holder.actionIv.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                 break;
@@ -64,7 +75,7 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
 
 
         }
-        holder.date.setText("");
+        holder.date.setText(Utils.dateToString(workLog.getTimestamp(), locale));
     }
 
     @NonNull
