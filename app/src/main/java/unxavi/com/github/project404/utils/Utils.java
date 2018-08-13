@@ -8,7 +8,7 @@ public class Utils {
 
     public static String dateToString(Date date, Locale locale) {
         if (date != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy", locale);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss", locale);
             return sdf.format(date);
         }else{
             return "";

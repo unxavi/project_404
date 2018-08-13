@@ -1,7 +1,6 @@
 package unxavi.com.github.project404.model;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
-import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
@@ -21,8 +20,7 @@ public class WorkLog {
 
     private Task task;
 
-    private @ServerTimestamp
-    Date timestamp;
+    private Date timestamp;
 
     public WorkLog() {
     }
@@ -30,6 +28,7 @@ public class WorkLog {
     public WorkLog(int action, Task task) {
         this.action = action;
         this.task = task;
+        this.timestamp = new Date();
     }
 
     // TODO: 8/12/18 add location
