@@ -1,7 +1,10 @@
 package unxavi.com.github.project404.features.main;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,11 +16,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -31,6 +36,14 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
@@ -38,6 +51,7 @@ import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
 
+@RuntimePermissions
 public class MainActivity extends MvpActivity<MainActivityView, MainActivityPresenter>
         implements NavigationView.OnNavigationItemSelectedListener,
         MainActivityView,
@@ -67,12 +81,16 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    
+
     @BindView(R.id.rootView)
     CoordinatorLayout rootView;
 
     private WorkLogAdapter adapter;
-    private WorkLog workLog;
+
+    @Nullable
+    private WorkLog lastWorkLog;
+    @Nullable
+    private Location location;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -178,6 +196,19 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        location = null;
+        MainActivityPermissionsDispatcher.getLocationWithPermissionCheck(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SmartLocation.with(this).location().stop();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (adapter != null) {
@@ -222,13 +253,13 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                 tasksDialogFragment.show(getSupportFragmentManager(), "TasksDialogFragment");
                 break;
             case R.id.fab_stop:
-                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_STOP);
+                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_STOP, location);
                 break;
             case R.id.fab_return:
-                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_RETURN);
+                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_RETURN, location);
                 break;
             case R.id.fab_pause:
-                presenter.createWorkLog(workLog.getTask(), WorkLog.ACTION_PAUSE);
+                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_PAUSE, location);
                 break;
         }
     }
@@ -294,7 +325,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                                     Timber.e(exception);
                                 }
                             }
-                            MainActivity.this.workLog = workLog;
+                            MainActivity.this.lastWorkLog = workLog;
                             renderFabButtonsFlow(workLog);
                         } else {
                             Timber.e(new RuntimeException("Firestore last work log document snapshot is null"));
@@ -314,7 +345,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     private void createStartWorkLog(Task task) {
-        presenter.createWorkLog(task, WorkLog.ACTION_START);
+        presenter.createWorkLog(task, WorkLog.ACTION_START, location);
     }
 
     @Override
@@ -343,4 +374,70 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public boolean isLocationEnable() {
+        boolean locationServicesEnabled = SmartLocation.with(this).location().state().locationServicesEnabled();
+        boolean anyProviderAvailable = SmartLocation.with(this).location().state().isAnyProviderAvailable();
+        return locationServicesEnabled && anyProviderAvailable;
+    }
+
+    @Override
+    public void showEnableLocation() {
+        Snackbar.make(rootView, R.string.location_services_off, Snackbar.LENGTH_LONG).show();
+    }
+
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    public void getLocation() {
+        if (!isLocationEnable()) {
+            showEnableLocation();
+        } else {
+            SmartLocation
+                    .with(this)
+                    .location()
+                    .start(new OnLocationUpdatedListener() {
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            MainActivity.this.location = location;
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_location_rationale)
+                .setPositiveButton(R.string.button_allow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton(R.string.button_deny, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showDeniedForCamera() {
+        Toast.makeText(this, R.string.permission_location_denied, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnNeverAskAgain(Manifest.permission.ACCESS_FINE_LOCATION)
+    void showNeverAskForCamera() {
+        Toast.makeText(this, R.string.permission_location_neverask, Toast.LENGTH_SHORT).show();
+    }
+
 }

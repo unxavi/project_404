@@ -13,4 +13,6 @@ public interface MainActivityView extends MvpView {
     void showWorkLogsList();
 
     void renderFabButtonsFlow(@Nullable WorkLog lastWorkLog);
+
+    void showEnableLocation();
 }

@@ -1,5 +1,8 @@
 package unxavi.com.github.project404.model;
 
+import android.location.Location;
+import android.support.annotation.Nullable;
+
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 import java.util.Date;
@@ -22,13 +25,21 @@ public class WorkLog {
 
     private Date timestamp;
 
+    private Double latitude;
+
+    private Double longitude;
+
     public WorkLog() {
     }
 
-    public WorkLog(int action, Task task) {
+    public WorkLog(int action, Task task, @Nullable Location location) {
         this.action = action;
         this.task = task;
         this.timestamp = new Date();
+        if (location != null){
+            this.latitude = location.getLatitude();
+            this.longitude = location.getLongitude();
+        }
     }
 
     // TODO: 8/12/18 add location
@@ -45,4 +56,11 @@ public class WorkLog {
         return timestamp;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 }

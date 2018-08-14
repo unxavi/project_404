@@ -1,5 +1,6 @@
 package unxavi.com.github.project404.features.main;
 
+import android.location.Location;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.Query;
@@ -22,8 +23,8 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> im
         return FirestoreHelper.getInstance().getLastUserWorkLog();
     }
 
-    public void createWorkLog(Task task, int action) {
-        WorkLog workLog = new WorkLog(action, task);
+    public void createWorkLog(Task task, int action, Location location) {
+        WorkLog workLog = new WorkLog(action, task, location);
         FirestoreHelper.getInstance().addUserWorkLog(workLog, this);
     }
 

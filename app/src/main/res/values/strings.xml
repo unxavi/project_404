@@ -22,5 +22,12 @@
     <string name="task_created">Task created</string>
     <string name="no_task_created">No task created</string>
     <string name="action_done_icon_content_description">Action done icon</string>
+    <string name="location_services_off">Remember to enable location services</string>
+    <string name="permission_location_rationale">With the location permission, the app can remiend you later where you were when you were working on something ;)</string>
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
+    <string name="permission_location_denied">You wont see your locations until you accept the permission</string>
+    <string name="permission_location_neverask">If you wish to have the full experience, enable the permission on the app settings</string>
+
 
 </resources>
