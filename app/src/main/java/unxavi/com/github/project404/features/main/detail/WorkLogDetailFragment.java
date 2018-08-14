@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import unxavi.com.github.project404.R;
-import unxavi.com.github.project404.features.deleteMasterDetail.dummy.DummyContent;
 import unxavi.com.github.project404.features.main.MainActivity;
 import unxavi.com.github.project404.model.WorkLog;
 

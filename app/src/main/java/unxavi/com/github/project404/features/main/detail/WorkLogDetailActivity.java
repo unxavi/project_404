@@ -11,14 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import unxavi.com.github.project404.R;
-import unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity;
+import unxavi.com.github.project404.features.main.MainActivity;
 import unxavi.com.github.project404.model.WorkLog;
 
 /**
  * An activity representing a single DeleteTimeLog detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link DeleteTimeLogListActivity}.
+ * in a {@link unxavi.com.github.project404.features.main.MainActivity}.
  */
 public class WorkLogDetailActivity extends AppCompatActivity {
 
@@ -77,7 +77,7 @@ public class WorkLogDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, DeleteTimeLogListActivity.class));
+            navigateUpTo(new Intent(this, MainActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
