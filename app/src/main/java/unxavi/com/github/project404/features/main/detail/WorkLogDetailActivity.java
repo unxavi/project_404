@@ -12,6 +12,7 @@ import android.view.View;
 
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.deleteMasterDetail.DeleteTimeLogListActivity;
+import unxavi.com.github.project404.model.WorkLog;
 
 /**
  * An activity representing a single DeleteTimeLog detail screen. This
@@ -56,8 +57,8 @@ public class WorkLogDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(WorkLogDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(WorkLogDetailFragment.ARG_ITEM_ID));
+            arguments.putParcelable(WorkLog.WORK_LOG_TAG,
+                    getIntent().getParcelableExtra(WorkLog.WORK_LOG_TAG));
             WorkLogDetailFragment fragment = new WorkLogDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

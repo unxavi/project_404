@@ -13,6 +13,7 @@ import android.widget.TextView;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.features.deleteMasterDetail.dummy.DummyContent;
 import unxavi.com.github.project404.features.main.MainActivity;
+import unxavi.com.github.project404.model.WorkLog;
 
 /**
  * A fragment representing a single DeleteTimeLog detail screen.
@@ -21,16 +22,8 @@ import unxavi.com.github.project404.features.main.MainActivity;
  * on handsets.
  */
 public class WorkLogDetailFragment extends Fragment {
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
-    public static final String ARG_ITEM_ID = "item_id";
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    private DummyContent.DummyItem mItem;
+    private  WorkLog workLog;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,16 +36,16 @@ public class WorkLogDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
+        if (getArguments() != null && getArguments().containsKey(WorkLog.WORK_LOG_TAG)) {
+            workLog = getArguments().getParcelable(WorkLog.WORK_LOG_TAG);
+            // TODO: 14/08/2018 do we need the getactivity for something real?
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = null;
+            if (activity != null) {
+                appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            }
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                appBarLayout.setTitle(workLog.getTask().getName());
             }
         }
     }
@@ -63,8 +56,8 @@ public class WorkLogDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.work_log_detail_fragment, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.deletetimelog_detail)).setText(mItem.details);
+        if (workLog != null) {
+            ((TextView) rootView.findViewById(R.id.deletetimelog_detail)).setText(workLog.getTask().getName());
         }
 
         return rootView;

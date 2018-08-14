@@ -46,6 +46,8 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.features.main.detail.WorkLogDetailActivity;
+import unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
 import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.model.Task;
@@ -101,7 +103,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
-    private boolean mTwoPane;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +125,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
-            mTwoPane = true;
+            twoPane = true;
         }
         setupRecyclerView();
         prepareLastWorkLogListener();
@@ -218,11 +220,6 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     private void closeOnError() {
         // TODO: 8/5/18
-    }
-
-    @Override
-    public void onItemClick(WorkLog workLog) {
-
     }
 
     @Override
@@ -438,6 +435,23 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @OnNeverAskAgain(Manifest.permission.ACCESS_FINE_LOCATION)
     void showNeverAskForCamera() {
         Toast.makeText(this, R.string.permission_location_neverask, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(WorkLog workLog) {
+        if (twoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(WorkLog.WORK_LOG_TAG, workLog);
+            WorkLogDetailFragment fragment = new WorkLogDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.work_log_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, WorkLogDetailActivity.class);
+            intent.putExtra(WorkLog.WORK_LOG_TAG, workLog);
+            startActivity(intent);
+        }
     }
 
 }
