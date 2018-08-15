@@ -17,6 +17,7 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.features.main.MainActivity;
 import unxavi.com.github.project404.model.Task;
 
 public class AddTaskActivity extends MvpActivity<AddTaskView, AddTaskPresenter> implements AddTaskView {
@@ -64,6 +65,16 @@ public class AddTaskActivity extends MvpActivity<AddTaskView, AddTaskPresenter> 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             createTask();
+            return true;
+        }
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button. In the case of this
+            // activity, the Up button is shown. For
+            // more details, see the Navigation pattern on Android Design:
+            //
+            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+            //
+            onBackPressed();
             return true;
         }
 
