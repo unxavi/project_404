@@ -29,6 +29,10 @@
     <string name="date_icon_contentDescription">Date icon</string>
     <string name="task_icon_content_description">Task icon</string>
     <string name="action_icon_content_description">Action icon</string>
+    <string name="sign_in_menu">Sign in</string>
+    <string name="tasks_menu">Tasks</string>
+    <string name="signout_menu">Sign out</string>
+    <string name="sesion_menu_header">Session</string>
 
 
 </resources>
