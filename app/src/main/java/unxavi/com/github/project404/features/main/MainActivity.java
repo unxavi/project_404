@@ -278,9 +278,8 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     private void prepareLastWorkLogListener() {
         Query lastWorkLogQuery = presenter.getLastWorkLogQuery();
         if (lastWorkLogQuery != null) {
-            lastWorkLogQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-                public WorkLog workLog;
-
+            // TODO: 8/13/18 we never stop listening
+            lastWorkLogQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if (e != null) {
