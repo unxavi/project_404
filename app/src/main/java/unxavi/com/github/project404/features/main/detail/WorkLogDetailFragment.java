@@ -79,17 +79,21 @@ public class WorkLogDetailFragment extends Fragment implements OnMapReadyCallbac
         View rootView = inflater.inflate(R.layout.work_log_detail_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
+        if (workLog != null) {
+            if (mapFragment != null) {
+                mapFragment.getMapAsync(this);
+            }
+            Locale locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                locale = getResources().getConfiguration().getLocales().get(0);
+            } else {
+                locale = getResources().getConfiguration().locale;
+            }
+            taskTV.setText(workLog.getTask().getName());
+            dateTV.setText(Utils.dateToString(workLog.getTimestamp(), locale));
+            actionIconIV.setImageResource(workLog.getImageResource());
+            actionTV.setText(workLog.getActionString());
         }
-        Locale locale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            locale = getResources().getConfiguration().getLocales().get(0);
-        } else {
-            locale = getResources().getConfiguration().locale;
-        }
-        taskTV.setText(workLog.getTask().getName());
-        dateTV.setText(Utils.dateToString(workLog.getTimestamp(), locale));
         return rootView;
     }
 

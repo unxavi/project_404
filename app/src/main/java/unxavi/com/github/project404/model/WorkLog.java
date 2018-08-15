@@ -7,7 +7,11 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
+
+import unxavi.com.github.project404.R;
 
 @IgnoreExtraProperties
 public class WorkLog implements Parcelable {
@@ -22,6 +26,11 @@ public class WorkLog implements Parcelable {
     public static final int ACTION_PAUSE = 1;
     public static final int ACTION_RETURN = 2;
     public static final int ACTION_STOP = 3;
+
+    private static final String START_WORKING = "Start working";
+    private static final String BREAK = "Break";
+    private static final String RETURN = "Return";
+    private static final String FINISH_WORKING = "Finish working";
 
     private int action;
 
@@ -40,7 +49,7 @@ public class WorkLog implements Parcelable {
         this.action = action;
         this.task = task;
         this.timestamp = new Date();
-        if (location != null){
+        if (location != null) {
             this.latitude = location.getLatitude();
             this.longitude = location.getLongitude();
         }
@@ -66,6 +75,36 @@ public class WorkLog implements Parcelable {
 
     public Double getLongitude() {
         return longitude;
+    }
+
+    public int getImageResource() {
+        switch (getAction()) {
+            case WorkLog.ACTION_START:
+                return R.drawable.ic_play_arrow_black_24dp;
+            case WorkLog.ACTION_PAUSE:
+                return R.drawable.ic_pause_black_24dp;
+            case WorkLog.ACTION_RETURN:
+                return R.drawable.ic_replay_black_24dp;
+            case WorkLog.ACTION_STOP:
+                return R.drawable.ic_stop_black_24dp;
+            default:
+                return R.drawable.ic_play_arrow_black_24dp;
+        }
+    }
+
+    public String getActionString() {
+        switch (getAction()) {
+            case WorkLog.ACTION_START:
+                return START_WORKING;
+            case WorkLog.ACTION_PAUSE:
+                return BREAK;
+            case WorkLog.ACTION_RETURN:
+                return RETURN;
+            case WorkLog.ACTION_STOP:
+                return FINISH_WORKING;
+            default:
+                return START_WORKING;
+        }
     }
 
     @Override

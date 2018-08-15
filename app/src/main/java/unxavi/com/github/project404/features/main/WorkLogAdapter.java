@@ -33,7 +33,7 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
     }
 
 
-    public WorkLogAdapter(@NonNull FirestoreRecyclerOptions<WorkLog> options, WorkLogInterface listener, Context context) {
+    WorkLogAdapter(@NonNull FirestoreRecyclerOptions<WorkLog> options, WorkLogInterface listener, Context context) {
         super(options);
         this.listener = listener;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -59,22 +59,7 @@ public class WorkLogAdapter extends FirestoreRecyclerAdapter<WorkLog, WorkLogAda
         holder.data = workLog;
         holder.date.setText("");
         holder.task.setText(workLog.getTask().getName());
-        switch (workLog.getAction()) {
-            case WorkLog.ACTION_START:
-                holder.actionIv.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                break;
-            case WorkLog.ACTION_PAUSE:
-                holder.actionIv.setImageResource(R.drawable.ic_pause_black_24dp);
-                break;
-            case WorkLog.ACTION_RETURN:
-                holder.actionIv.setImageResource(R.drawable.ic_replay_black_24dp);
-                break;
-            case WorkLog.ACTION_STOP:
-                holder.actionIv.setImageResource(R.drawable.ic_stop_black_24dp);
-                break;
-
-
-        }
+        holder.actionIv.setImageResource(workLog.getImageResource());
         holder.date.setText(Utils.dateToString(workLog.getTimestamp(), locale));
     }
 

@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".features.main.detail.WorkLogDetailActivity"
-            android:label="@string/title_deletetimelog_detail"
+            android:label="@string/title_detail_activity"
             android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -54,9 +54,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".features.delete.DeleteMapsActivity"
-            android:label="@string/title_activity_delete_maps"></activity>
     </application>
 
 </manifest>
