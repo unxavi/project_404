@@ -13,6 +13,8 @@ import android.view.View;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,7 +50,7 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setRetainInstance(true);
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         // Get the layout inflater
         builder.setTitle(R.string.choose_task_dialog_title);
         LayoutInflater inflater = getActivity().getLayoutInflater();

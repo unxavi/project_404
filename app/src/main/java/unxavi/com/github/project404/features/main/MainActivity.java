@@ -250,13 +250,25 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                 tasksDialogFragment.show(getSupportFragmentManager(), "TasksDialogFragment");
                 break;
             case R.id.fab_stop:
-                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_STOP, location);
+                if (lastWorkLog != null) {
+                    presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_STOP, location);
+                } else {
+                    Timber.w(new Throwable("No lastWorkLog in MainActivity to get the task from"));
+                }
                 break;
             case R.id.fab_return:
-                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_RETURN, location);
+                if (lastWorkLog != null) {
+                    presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_RETURN, location);
+                } else {
+                    Timber.w(new Throwable("No lastWorkLog in MainActivity to get the task from"));
+                }
                 break;
             case R.id.fab_pause:
-                presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_PAUSE, location);
+                if (lastWorkLog != null) {
+                    presenter.createWorkLog(lastWorkLog.getTask(), WorkLog.ACTION_PAUSE, location);
+                } else {
+                    Timber.w(new Throwable("No lastWorkLog in MainActivity to get the task from"));
+                }
                 break;
         }
     }
