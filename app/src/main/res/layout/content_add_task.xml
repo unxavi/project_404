@@ -23,6 +23,7 @@
             android:id="@+id/taskNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:hint="@string/task_name_hint" />
 
     </android.support.design.widget.TextInputLayout>
