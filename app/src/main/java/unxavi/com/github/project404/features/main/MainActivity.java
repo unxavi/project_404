@@ -24,14 +24,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,9 +55,11 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.auth.AuthHelper;
 import unxavi.com.github.project404.features.main.detail.WorkLogDetailActivity;
 import unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
+import unxavi.com.github.project404.features.splash.SplashActivity;
 import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
@@ -59,6 +70,15 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         MainActivityView,
         WorkLogAdapter.WorkLogInterface,
         TasksDialogFragment.TaskSelectDialogListener {
+
+    private static final int RC_SIGN_IN = 847;
+
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    /*
+     * to know when the app is in the process of signing a user
+     * in anonymous and avoid multiple calls to method
+     */
+    private boolean isSigningInAnonymousUser;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -91,8 +111,10 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
     @Nullable
     private WorkLog lastWorkLog;
+
     @Nullable
     private Location location;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -108,10 +130,10 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initAuth();
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -149,10 +171,11 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
         if (id == R.id.signin) {
             // Handle the camera action
+            signInUser();
         } else if (id == R.id.tasks) {
 
         } else if (id == R.id.signout) {
-
+            signOutUser();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -196,12 +219,14 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         super.onResume();
         location = null;
         MainActivityPermissionsDispatcher.getLocationWithPermissionCheck(this);
+        AuthHelper.getInstance().getAuth().addAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SmartLocation.with(this).location().stop();
+        AuthHelper.getInstance().getAuth().removeAuthStateListener(authStateListener);
     }
 
     @Override
@@ -373,6 +398,15 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                     Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
                 }
             }
+        } else if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                // ...
+            } else {
+                // Sign in failed, check response for error code
+                // ...
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -460,4 +494,85 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         }
     }
 
+    private void initAuth() {
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                getCurrentUser();
+            }
+        };
+    }
+
+    private void signInUser() {
+        // Create and launch sign-in intent
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(Arrays.asList(
+                                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                new AuthUI.IdpConfig.EmailBuilder().build(),
+                                new AuthUI.IdpConfig.PhoneBuilder().build()))
+                        .setLogo(R.drawable.ic_access_time_96)
+                        .setTheme(R.style.SignupTheme)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    /**
+     * Logout the current sign-in user
+     */
+    private void signOutUser() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        // user is now signed out
+                        finish();
+                        Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+    }
+
+
+    private void getCurrentUser() {
+        AuthHelper authHelper = AuthHelper.getInstance();
+        FirebaseUser currentUser = authHelper.getAuth().getCurrentUser();
+        if (!authHelper.isUserSignedIn()) {
+            signInAnonymously();
+        } else {
+            updateUI(currentUser);
+        }
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+        // TODO: 15/08/2018  
+    }
+
+    /**
+     * Sign a user anonymously if there are no credentials for the user
+     */
+    private void signInAnonymously() {
+        if (!isSigningInAnonymousUser) {
+            isSigningInAnonymousUser = true;
+            auth.signInAnonymously()
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
+                            isSigningInAnonymousUser = false;
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                // this should be executed on the listener
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Toast.makeText(MainActivity.this, R.string.network_error_anonymous_first_time,
+                                        Toast.LENGTH_SHORT).show();
+                                // this should be executed on the listener
+                            }
+                        }
+                    });
+        }
+    }
 }
