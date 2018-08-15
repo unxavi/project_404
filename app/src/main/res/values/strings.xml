@@ -28,6 +28,7 @@
     <string name="button_deny">Deny</string>
     <string name="permission_location_denied">You wont see your locations until you accept the permission</string>
     <string name="permission_location_neverask">If you wish to have the full experience, enable the permission on the app settings</string>
+    <string name="title_activity_delete_maps">Map acitivty Delete</string>
 
 
 </resources>

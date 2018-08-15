@@ -55,6 +55,7 @@ dependencies {
         transitive = false
     }
     implementation "com.github.hotchemi:permissionsdispatcher:${permissionsdispatcher}"
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:${permissionsdispatcher}"
     //todo add crashlitycs
     implementation "com.hannesdorfmann.mosby3:mvp:${mosby}"
