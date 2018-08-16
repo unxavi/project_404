@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -40,7 +41,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,6 +115,8 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Nullable
     private Location location;
     private FirebaseAuth.AuthStateListener authStateListener;
+    private MenuItem itemNavMenuSignin;
+    private MenuItem itemNavMenuSignout;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -141,6 +143,11 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu navMenu = navigationView.getMenu();
+        itemNavMenuSignin = navMenu.findItem(R.id.signin);
+        itemNavMenuSignout = navMenu.findItem(R.id.signout);
+
 
         if (findViewById(R.id.work_log_detail_container) != null) {
             // The detail container view will be present only in the
@@ -512,7 +519,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                                 new AuthUI.IdpConfig.GoogleBuilder().build(),
                                 new AuthUI.IdpConfig.EmailBuilder().build(),
                                 new AuthUI.IdpConfig.PhoneBuilder().build()))
-                        .setLogo(R.drawable.ic_access_time_96)
+                        .setLogo(R.drawable.ic_access_time_grey_96dp)
                         .setTheme(R.style.SignupTheme)
                         .build(),
                 RC_SIGN_IN);
@@ -548,7 +555,23 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        // TODO: 15/08/2018  
+        if (currentUser.isAnonymous()) {
+            showSignInMenu();
+        } else {
+            showSignOutMenu();
+        }
+    }
+
+    @Override
+    public void showSignInMenu() {
+        itemNavMenuSignout.setVisible(false);
+        itemNavMenuSignin.setVisible(true);
+    }
+
+    @Override
+    public void showSignOutMenu() {
+        itemNavMenuSignin.setVisible(false);
+        itemNavMenuSignout.setVisible(true);
     }
 
     /**

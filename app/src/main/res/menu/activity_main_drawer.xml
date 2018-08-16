@@ -7,7 +7,8 @@
         <item
             android:id="@+id/signin"
             android:icon="@drawable/ic_person_black_24dp"
-            android:title="@string/sign_in_menu" />
+            android:title="@string/sign_in_menu"
+            android:visible="false" />
         <item
             android:id="@+id/tasks"
             android:icon="@drawable/ic_format_list_numbered_black_24dp"
