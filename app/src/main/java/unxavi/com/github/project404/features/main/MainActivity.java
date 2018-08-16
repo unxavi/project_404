@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,9 +21,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -39,6 +43,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
@@ -117,6 +122,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     private FirebaseAuth.AuthStateListener authStateListener;
     private MenuItem itemNavMenuSignin;
     private MenuItem itemNavMenuSignout;
+    private NavigationView navigationView;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, MainActivity.class);
@@ -141,7 +147,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Menu navMenu = navigationView.getMenu();
@@ -555,6 +561,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     private void updateUI(FirebaseUser currentUser) {
+        populateHeaderMenuData(currentUser);
         if (currentUser.isAnonymous()) {
             showSignInMenu();
         } else {
@@ -598,4 +605,30 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                     });
         }
     }
+
+    private void populateHeaderMenuData(FirebaseUser user) {
+        View header = navigationView.getHeaderView(0);
+        ImageView profileIV = header.findViewById(R.id.imageView);
+        TextView userNameTV = header.findViewById(R.id.nameTV);
+        TextView emailTV = header.findViewById(R.id.emailTV);
+
+        if (user != null && !user.isAnonymous()) {
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+            String phoneNumber = user.getPhoneNumber();
+
+            emailTV.setText(email);
+            userNameTV.setText(!TextUtils.isEmpty(name) ? name : phoneNumber);
+            if (photoUrl != null) {
+                Picasso.get().load(photoUrl).into(profileIV);
+            }
+        } else {
+            emailTV.setText("");
+            userNameTV.setText("");
+        }
+    }
+
+    // TODO: 16/08/2018 on create task, the info the the view is empty does not disapear
+
 }
