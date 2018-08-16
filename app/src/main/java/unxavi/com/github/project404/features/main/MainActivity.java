@@ -630,5 +630,6 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     // TODO: 16/08/2018 on create task, the info the the view is empty does not disapear
+    // TODO: 16/08/2018 on sign in or sign out the RV Adapater does not listen to the new user
 
 }
