@@ -17,15 +17,11 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
-import unxavi.com.github.project404.features.main.MainActivity;
 import unxavi.com.github.project404.model.Task;
 
 public class AddTaskActivity extends MvpActivity<AddTaskView, AddTaskPresenter> implements AddTaskView {
 
     public static final int RC_ADD_TASK = 9002;
-
-    public static final String TASK_CREATED = "TASK_CREATED";
-
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -100,7 +96,7 @@ public class AddTaskActivity extends MvpActivity<AddTaskView, AddTaskPresenter> 
     @Override
     public void taskCreated(Task task) {
         Intent data = new Intent();
-        data.putExtra(TASK_CREATED, task);
+        data.putExtra(Task.TASK_TAG, task);
         setResult(CommonStatusCodes.SUCCESS, data);
         finish();
     }

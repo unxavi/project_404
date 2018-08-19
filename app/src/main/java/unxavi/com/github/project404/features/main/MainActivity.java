@@ -400,7 +400,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         if (requestCode == AddTaskActivity.RC_ADD_TASK) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
-                    Task task = data.getParcelableExtra(AddTaskActivity.TASK_CREATED);
+                    Task task = data.getParcelableExtra(Task.TASK_TAG);
                     if (task != null) {
                         Snackbar.make(rootView, R.string.task_created, Snackbar.LENGTH_LONG).show();
                         createStartWorkLog(task);

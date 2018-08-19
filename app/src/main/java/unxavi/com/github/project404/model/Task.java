@@ -9,6 +9,8 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Task implements Parcelable {
 
+    public static final String TASK_TAG = "TASK_TAG";
+
     public static final String COLLECTION = "tasks";
 
     public static final String FIELD_NAME_LOWERCASE = "nameLowerCase";
