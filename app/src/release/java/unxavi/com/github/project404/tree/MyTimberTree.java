@@ -12,8 +12,10 @@ public class MyTimberTree extends Timber.Tree {
 
         if (priority == Log.WARN) {
             // TODO: 8/4/18   YourCrashLibrkary.logWarning(throwable);
-        } else {
+        } else if (priority == Log.ERROR) {
             // TODO: 8/4/18   YourCrashLibrary.logException(throwable);
+        }else{
+            //discard the logs
         }
     }
 }
