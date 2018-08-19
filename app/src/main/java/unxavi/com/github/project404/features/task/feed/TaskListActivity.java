@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.Group;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.firebase.firestore.Query;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
@@ -21,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.adapter.TaskAdapter;
+import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.features.task.feed.detail.TaskDetailActivity;
 import unxavi.com.github.project404.features.task.feed.detail.TaskDetailFragment;
 import unxavi.com.github.project404.model.Task;
@@ -43,6 +47,9 @@ public class TaskListActivity extends MvpActivity<TasksView, TasksPresenter> imp
 
     @BindView(R.id.task_list)
     RecyclerView taskList;
+
+    @BindView(R.id.rootView)
+    CoordinatorLayout rootView;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -140,6 +147,8 @@ public class TaskListActivity extends MvpActivity<TasksView, TasksPresenter> imp
 
     @OnClick(R.id.fab)
     public void onViewClicked() {
+        Intent intent = new Intent(this, AddTaskActivity.class);
+        startActivityForResult(intent, AddTaskActivity.RC_ADD_TASK);
     }
 
     @Override
@@ -164,6 +173,26 @@ public class TaskListActivity extends MvpActivity<TasksView, TasksPresenter> imp
             showEmptyView();
         } else {
             showTasksList();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AddTaskActivity.RC_ADD_TASK) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Task task = data.getParcelableExtra(Task.TASK_TAG);
+                    if (task != null) {
+                        Snackbar.make(rootView, R.string.task_created, Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    Snackbar.make(rootView, R.string.no_task_created, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
