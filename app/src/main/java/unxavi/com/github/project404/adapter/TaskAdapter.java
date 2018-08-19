@@ -22,6 +22,9 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<Task, TaskAdapter.Task
 
     public interface WalletListInterface {
         void onTaskClick(Task task);
+
+        void isListEmpty(boolean isEmpty);
+
     }
 
 
@@ -30,6 +33,15 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<Task, TaskAdapter.Task
         this.listener = listener;
     }
 
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() == 0) {
+            listener.isListEmpty(true);
+        } else {
+            listener.isListEmpty(false);
+        }
+    }
 
     @Override
     protected void onBindViewHolder(@NonNull TaskHolder holder, int position, @NonNull Task model) {

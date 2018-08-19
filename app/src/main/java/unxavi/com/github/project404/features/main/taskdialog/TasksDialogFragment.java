@@ -117,6 +117,11 @@ public class TasksDialogFragment extends DialogFragment implements TaskAdapter.W
         }
     }
 
+    @Override
+    public void isListEmpty(boolean isEmpty) {
+        //no need to implement this method
+    }
+
     @OnClick({R.id.addTaskIV, R.id.addTaskTv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
