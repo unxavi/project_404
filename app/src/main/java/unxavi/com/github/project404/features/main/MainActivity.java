@@ -175,7 +175,6 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             twoPane = true;
         }
         setupRecyclerView();
-        prepareLastWorkLogListener();
     }
 
     @Override
@@ -264,6 +263,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     @Override
     protected void onResume() {
         super.onResume();
+        prepareLastWorkLogListener();
         location = null;
         MainActivityPermissionsDispatcher.getLocationWithPermissionCheck(this);
         AuthHelper.getInstance().getAuth().addAuthStateListener(authStateListener);
@@ -285,7 +285,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     }
 
     private void closeOnError() {
-        // TODO: 8/5/18
+        restartApp();
     }
 
     @Override
@@ -384,8 +384,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
     private void prepareLastWorkLogListener() {
         Query lastWorkLogQuery = presenter.getLastWorkLogQuery();
         if (lastWorkLogQuery != null) {
-            // TODO: 8/13/18 we never stop listening
-            lastWorkLogQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            lastWorkLogQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if (e != null) {
@@ -575,12 +574,16 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                     @Override
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
                         // user is now signed out
-                        finish();
-                        Intent intent = new Intent(MainActivity.this, SplashActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        restartApp();
                     }
                 });
+    }
+
+    private void restartApp() {
+        finish();
+        Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
@@ -689,9 +692,9 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                             Timber.e(exception);
                         }
                     }
-                    if(workLogs.isEmpty()){
+                    if (workLogs.isEmpty()) {
                         Snackbar.make(rootView, R.string.empty_work_logs_message, Snackbar.LENGTH_LONG).show();
-                    }else{
+                    } else {
                         new MakeExcelReportAsyncTask(MainActivity.this, locale, externalFilesDir, workLogs).execute();
                     }
                 }
