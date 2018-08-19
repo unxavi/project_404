@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 
 import unxavi.com.github.project404.R;
@@ -54,8 +52,6 @@ public class WorkLog implements Parcelable {
             this.longitude = location.getLongitude();
         }
     }
-
-    // TODO: 8/12/18 add location
 
     public int getAction() {
         return action;
