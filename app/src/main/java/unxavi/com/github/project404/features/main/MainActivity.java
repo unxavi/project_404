@@ -449,6 +449,9 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 // ...
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             } else {
                 // Sign in failed, check response for error code
                 // ...
@@ -735,9 +738,5 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             Snackbar.make(rootView, R.string.problem_generate_excel_report, Snackbar.LENGTH_LONG).show();
         }
     }
-
-
-    // TODO: 16/08/2018 on create task, the info the the view is empty does not disapear
-    // TODO: 16/08/2018 on sign in or sign out the RV Adapater does not listen to the new user
 
 }
