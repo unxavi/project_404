@@ -88,7 +88,7 @@ public class FirestoreHelper {
             db.collection(User.COLLECTION)
                     .document(AuthHelper.getInstance().getCurrentUser().getUid())
                     .collection(Task.COLLECTION)
-                    .document()
+                    .document(task.getNameLowerCase())
                     .set(task, SetOptions.merge())
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -126,6 +126,20 @@ public class FirestoreHelper {
                         }
                     });
         }
+    }
+
+    public void deleteUserTask(String uid, Task task) {
+        db.collection(User.COLLECTION)
+                .document(uid)
+                .collection(Task.COLLECTION)
+                .document(task.getNameLowerCase())
+                .delete()
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                       Timber.e(e);
+                    }
+                });
     }
 
 

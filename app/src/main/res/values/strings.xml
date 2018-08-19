@@ -42,6 +42,10 @@
     <string name="report_subject">Work logs Report</string>
     <string name="report_text">Work logs email Report.</string>
     <string name="report_send_mail_action">Send email</string>
+    <string name="delete">Delete</string>
 
+    <string name="confirm_delete">Confirm delete</string>
+    <string name="delete_message">Do you really want to delete the task?</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

@@ -23,7 +23,11 @@
             android:id="@+id/taskNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none" />
 
     </android.support.design.widget.TextInputLayout>
 
