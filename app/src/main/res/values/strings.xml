@@ -36,6 +36,12 @@
     <string name="title_task_list">Tasks</string>
     <string name="title_task_detail">Task Detail</string>
     <string name="download">Download</string>
+    <string name="error_install_xls_viewer">Error: you need to install a Excel viewer</string>
+    <string name="problem_generate_excel_report">There was a problem generating the file</string>
+
+    <string name="report_subject">Work logs Report</string>
+    <string name="report_text">Work logs email Report.</string>
+    <string name="report_send_mail_action">Send email</string>
 
 
 </resources>

@@ -1,12 +1,15 @@
 package unxavi.com.github.project404.features.main;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
@@ -14,6 +17,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,6 +38,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,7 +50,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,8 +67,11 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
+import unxavi.com.github.project404.BuildConfig;
 import unxavi.com.github.project404.R;
+import unxavi.com.github.project404.async.MakeExcelReportAsyncTask;
 import unxavi.com.github.project404.auth.AuthHelper;
+import unxavi.com.github.project404.data.FirestoreHelper;
 import unxavi.com.github.project404.features.main.detail.WorkLogDetailActivity;
 import unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
@@ -75,7 +86,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         implements NavigationView.OnNavigationItemSelectedListener,
         MainActivityView,
         WorkLogAdapter.WorkLogInterface,
-        TasksDialogFragment.TaskSelectDialogListener {
+        TasksDialogFragment.TaskSelectDialogListener, MakeExcelReportAsyncTask.MakeExcelListener {
 
     private static final int RC_SIGN_IN = 847;
 
@@ -193,7 +204,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_download) {
-            // TODO: 8/19/18 export 
+            makeExcelFile();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -651,6 +662,77 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
             userNameTV.setText("");
         }
     }
+
+    private void makeExcelFile() {
+        // check if available and not read only
+        if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
+            return;
+        }
+        final File externalFilesDir = getExternalFilesDir(null);
+        final Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = getResources().getConfiguration().getLocales().get(0);
+        } else {
+            locale = getResources().getConfiguration().locale;
+        }
+        Query userWorkLogs = FirestoreHelper.getInstance().getUserWorkLogs();
+        if (userWorkLogs != null) {
+            final ArrayList<WorkLog> workLogs = new ArrayList<>();
+            userWorkLogs.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            WorkLog worklog = document.toObject(WorkLog.class);
+                            workLogs.add(worklog);
+                        } catch (Exception exception) {
+                            Timber.e(exception);
+                        }
+                    }
+                    if(workLogs.isEmpty()){
+                        Snackbar.make(rootView, R.string.empty_work_logs_message, Snackbar.LENGTH_LONG).show();
+                    }else{
+                        new MakeExcelReportAsyncTask(MainActivity.this, locale, externalFilesDir, workLogs).execute();
+                    }
+                }
+            });
+        }
+    }
+
+    public static boolean isExternalStorageAvailable() {
+        String extStorageState = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(extStorageState);
+    }
+
+    public static boolean isExternalStorageReadOnly() {
+        String extStorageState = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState);
+    }
+
+    @Override
+    public void onExcelDoneListener(String filePath) {
+        if (!TextUtils.isEmpty(filePath)) {
+            Uri path = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(filePath));
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setDataAndType(path, "application/vnd.ms-excel");
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Snackbar.make(rootView, R.string.error_install_xls_viewer, Snackbar.LENGTH_LONG).show();
+                //send by email
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.report_subject));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.report_text));
+                intent.putExtra(Intent.EXTRA_STREAM, path);
+                intent.setType("message/rfc822");
+                startActivity(Intent.createChooser(intent, getString(R.string.report_send_mail_action)));
+            }
+        } else {
+            Snackbar.make(rootView, R.string.problem_generate_excel_report, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
 
     // TODO: 16/08/2018 on create task, the info the the view is empty does not disapear
     // TODO: 16/08/2018 on sign in or sign out the RV Adapater does not listen to the new user
