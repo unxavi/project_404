@@ -66,6 +66,7 @@ import unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment;
 import unxavi.com.github.project404.features.main.taskdialog.TasksDialogFragment;
 import unxavi.com.github.project404.features.splash.SplashActivity;
 import unxavi.com.github.project404.features.task.AddTaskActivity;
+import unxavi.com.github.project404.features.task.feed.TaskListActivity;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
 
@@ -183,10 +184,10 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         int id = item.getItemId();
 
         if (id == R.id.signin) {
-            // Handle the camera action
             signInUser();
         } else if (id == R.id.tasks) {
-
+            Intent intent = new Intent(this, TaskListActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signout) {
             signOutUser();
         }
@@ -593,13 +594,13 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
                             isSigningInAnonymousUser = false;
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
+                                // Sign in success, the user auth listener will update UI with the
+                                // signed-in user's information
                                 // this should be executed on the listener
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Toast.makeText(MainActivity.this, R.string.network_error_anonymous_first_time,
                                         Toast.LENGTH_SHORT).show();
-                                // this should be executed on the listener
                             }
                         }
                     });

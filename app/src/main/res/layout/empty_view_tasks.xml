@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <ImageView
+        android:id="@+id/empty_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:contentDescription="@string/empty_task_content_description"
+        android:tint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_format_list_numbered_black_24dp" />
+
+    <TextView
+        android:id="@+id/empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/empty_tasks_message"
+        app:layout_constraintEnd_toEndOf="@+id/empty_image"
+        app:layout_constraintStart_toStartOf="@+id/empty_image"
+        app:layout_constraintTop_toBottomOf="@+id/empty_image" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="empty_image,empty_text" />
+
+</merge>

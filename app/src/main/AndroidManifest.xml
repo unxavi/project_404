@@ -28,10 +28,12 @@
         <activity
             android:name=".features.main.MainActivity"
             android:label="@string/title_activity_main"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".features.main.detail.WorkLogDetailActivity"
             android:label="@string/title_detail_activity"
+            android:launchMode="singleTop"
             android:parentActivityName=".features.main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -41,6 +43,7 @@
         <activity
             android:name=".features.task.AddTaskActivity"
             android:label="@string/title_activity_add_task"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -54,6 +57,26 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity
+            android:name=".features.task.feed.TaskListActivity"
+            android:label="@string/title_task_list"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="unxavi.com.github.project404.features.main.MainActivity" />
+        </activity>
+        <activity
+            android:name=".features.task.feed.detail.TaskDetailActivity"
+            android:label="@string/title_task_detail"
+            android:launchMode="singleTop"
+            android:parentActivityName=".features.task.feed.TaskListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="unxavi.com.github.project404.features.task.feed.TaskListActivity" />
+        </activity>
     </application>
 
 </manifest>

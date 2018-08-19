@@ -1,4 +1,4 @@
-package unxavi.com.github.project404.features.main.detail;
+package unxavi.com.github.project404.features.task.feed.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,16 +10,16 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import unxavi.com.github.project404.R;
-import unxavi.com.github.project404.features.main.MainActivity;
-import unxavi.com.github.project404.model.WorkLog;
+import unxavi.com.github.project404.features.task.feed.TaskListActivity;
+import unxavi.com.github.project404.model.Task;
 
 /**
- * An activity representing a single Work logsF detail screen. This
+ * An activity representing a single Task detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link MainActivity}.
+ * in a {@link TaskListActivity}.
  */
-public class WorkLogDetailActivity extends AppCompatActivity {
+public class TaskDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -27,10 +27,9 @@ public class WorkLogDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worktimelog_detail);
+        setContentView(R.layout.activity_task_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -50,12 +49,12 @@ public class WorkLogDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putParcelable(WorkLog.WORK_LOG_TAG,
-                    getIntent().getParcelableExtra(WorkLog.WORK_LOG_TAG));
-            WorkLogDetailFragment fragment = new WorkLogDetailFragment();
+            arguments.putParcelable(Task.TASK_TAG,
+                    getIntent().getParcelableExtra(Task.TASK_TAG));
+            TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.work_log_detail_container, fragment)
+                    .add(R.id.task_detail_container, fragment)
                     .commit();
         }
     }
@@ -70,7 +69,7 @@ public class WorkLogDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, MainActivity.class));
+            navigateUpTo(new Intent(this, TaskListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

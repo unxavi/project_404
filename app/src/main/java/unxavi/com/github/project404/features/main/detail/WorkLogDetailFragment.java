@@ -31,7 +31,7 @@ import unxavi.com.github.project404.model.WorkLog;
 import unxavi.com.github.project404.utils.Utils;
 
 /**
- * A fragment representing a single DeleteTimeLog detail screen.
+ * A fragment representing a single work log detail screen.
  * This fragment is either contained in a {@link MainActivity}
  * in two-pane mode (on tablets) or a {@link WorkLogDetailActivity}
  * on handsets.

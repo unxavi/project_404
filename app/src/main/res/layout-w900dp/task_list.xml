@@ -2,22 +2,24 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:name="unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerHorizontal"
     android:showDividers="middle"
-    tools:context="unxavi.com.github.project404.features.main.MainActivity">
+    tools:context=".features.task.feed.TaskListActivity">
 
     <!--
-    This layout is a two-pane layout for the work logs
+    This layout is a two-pane layout for the Tasks
     master/detail flow.
     
     -->
-    <include layout="@layout/empty_view_worklogs" />
+    <include layout="@layout/empty_view_tasks" />
+
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/work_log_recyclerview"
-        android:name="unxavi.com.github.project404.features.main.detail.WorkLogDetailFragment"
+        android:id="@+id/task_list"
+        android:name="unxavi.com.github.project404.features.task.feed.TaskListFragment"
         android:layout_width="@dimen/item_width"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
@@ -28,16 +30,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/work_log_item" />
-
+        tools:listitem="@layout/item_task" />
 
     <FrameLayout
-        android:id="@+id/work_log_detail_container"
+        android:id="@+id/task_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/work_log_recyclerview"
+        app:layout_constraintStart_toEndOf="@+id/task_list"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

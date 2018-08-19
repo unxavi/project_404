@@ -8,4 +8,6 @@
     <dimen name="item_width">300dp</dimen>
     <dimen name="top_fab_marginBottom">84dp</dimen>
     <dimen name="workLogRecyclerViewPaddingBottom">150dp</dimen>
+    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>
