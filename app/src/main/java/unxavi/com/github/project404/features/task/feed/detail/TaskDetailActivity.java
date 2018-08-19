@@ -51,6 +51,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putParcelable(Task.TASK_TAG,
                     getIntent().getParcelableExtra(Task.TASK_TAG));
+            arguments.putBoolean(TaskDetailFragment.IS_TWO_PANE, false);
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

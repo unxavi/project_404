@@ -156,6 +156,7 @@ public class TaskListActivity extends MvpActivity<TasksView, TasksPresenter> imp
         if (twoPane) {
             Bundle arguments = new Bundle();
             arguments.putParcelable(Task.TASK_TAG, task);
+            arguments.putBoolean(TaskDetailFragment.IS_TWO_PANE, true);
             TaskDetailFragment fragment = new TaskDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

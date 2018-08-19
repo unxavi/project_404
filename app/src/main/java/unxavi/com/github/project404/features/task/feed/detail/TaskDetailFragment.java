@@ -29,7 +29,11 @@ import unxavi.com.github.project404.model.Task;
  */
 public class TaskDetailFragment extends Fragment implements DeleteDialogFragment.DeleteDialogFragmentListener {
 
+    public static final String IS_TWO_PANE = "IS_TWO_PANE";
+
     private Task task;
+
+    private boolean isTwoPane;
 
     @BindView(R.id.taskNameET)
     EditText taskNameET;
@@ -52,6 +56,9 @@ public class TaskDetailFragment extends Fragment implements DeleteDialogFragment
 
         if (getArguments() != null && getArguments().containsKey(Task.TASK_TAG)) {
             task = getArguments().getParcelable(Task.TASK_TAG);
+        }
+        if (getArguments() != null && getArguments().containsKey(IS_TWO_PANE)) {
+            isTwoPane = getArguments().getBoolean(IS_TWO_PANE);
         }
         setHasOptionsMenu(true);
     }
@@ -95,7 +102,11 @@ public class TaskDetailFragment extends Fragment implements DeleteDialogFragment
     public void onDialogPositiveClick() {
         FirestoreHelper.getInstance().deleteUserTask(AuthHelper.getInstance().getCurrentUser().getUid(), task);
         if (getActivity() != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            if (isTwoPane) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            }else{
+                getActivity().finish();
+            }
         }
     }
 
