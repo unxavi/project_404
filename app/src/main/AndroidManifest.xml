@@ -24,6 +24,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <activity
             android:name=".features.splash.SplashActivity"
             android:noHistory="true"
@@ -86,6 +87,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="unxavi.com.github.project404.features.task.feed.TaskListActivity" />
         </activity>
+
+        <receiver android:name=".widget.AppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

@@ -47,5 +47,7 @@
     <string name="confirm_delete">Confirm delete</string>
     <string name="delete_message">Do you really want to delete the task?</string>
     <string name="cancel">Cancel</string>
+    <string name="appwidget_text">Task to work on</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
