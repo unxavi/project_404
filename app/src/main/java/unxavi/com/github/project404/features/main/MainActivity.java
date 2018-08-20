@@ -1,7 +1,9 @@
 package unxavi.com.github.project404.features.main;
 
 import android.Manifest;
+import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -80,6 +82,7 @@ import unxavi.com.github.project404.features.task.AddTaskActivity;
 import unxavi.com.github.project404.features.task.feed.TaskListActivity;
 import unxavi.com.github.project404.model.Task;
 import unxavi.com.github.project404.model.WorkLog;
+import unxavi.com.github.project404.widget.AppWidget;
 
 @RuntimePermissions
 public class MainActivity extends MvpActivity<MainActivityView, MainActivityPresenter>
@@ -401,6 +404,7 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
                             }
                             MainActivity.this.lastWorkLog = workLog;
                             renderFabButtonsFlow(workLog);
+                            updateWidget();
                         } else {
                             Timber.e(new RuntimeException("Firestore last work log document snapshot is null"));
                         }
@@ -739,4 +743,10 @@ public class MainActivity extends MvpActivity<MainActivityView, MainActivityPres
         }
     }
 
+    @Override
+    public void updateWidget() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, AppWidget.class));
+        AppWidget.updateWidgetFromActivity(this, appWidgetManager, appWidgetIds);
+    }
 }

@@ -19,4 +19,6 @@ public interface MainActivityView extends MvpView {
     void showSignInMenu();
 
     void showSignOutMenu();
+
+    void updateWidget();
 }

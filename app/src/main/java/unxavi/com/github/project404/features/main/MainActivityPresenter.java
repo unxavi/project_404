@@ -1,6 +1,7 @@
 package unxavi.com.github.project404.features.main;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.firestore.Query;
@@ -30,6 +31,5 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> im
 
     @Override
     public void workLogCreated(WorkLog workLog) {
-
     }
 }

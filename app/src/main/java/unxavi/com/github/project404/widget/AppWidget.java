@@ -1,8 +1,10 @@
 package unxavi.com.github.project404.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -15,6 +17,7 @@ import timber.log.Timber;
 import unxavi.com.github.project404.R;
 import unxavi.com.github.project404.data.FirestoreHelper;
 import unxavi.com.github.project404.model.WorkLog;
+import unxavi.com.github.project404.service.CreateWorkLogIntentService;
 
 /**
  * Implementation of App Widget functionality.
@@ -27,7 +30,7 @@ public class AppWidget extends AppWidgetProvider {
         }
     }
 
-    private static void updateWidget(Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
+    private static void updateWidget(final Context context, final AppWidgetManager appWidgetManager, final int appWidgetId) {
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
 
         Query lastUserWorkLog = FirestoreHelper.getInstance().getLastUserWorkLog();
@@ -36,15 +39,17 @@ public class AppWidget extends AppWidgetProvider {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     if (queryDocumentSnapshots != null) {
-                        WorkLog workLog = null;
+                        WorkLog lastWorkLog = null;
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             try {
-                                workLog = document.toObject(WorkLog.class);
+                                lastWorkLog = document.toObject(WorkLog.class);
                             } catch (Exception exception) {
                                 Timber.e(exception);
                             }
                         }
-                        renderWidgetFlow(views, appWidgetManager, appWidgetId, workLog);
+                        if (lastWorkLog != null) {
+                            renderWidgetFlow(context, views, appWidgetManager, appWidgetId, lastWorkLog);
+                        }
                     } else {
                         Timber.e(new RuntimeException("Firestore last work log document snapshot is null"));
                     }
@@ -53,7 +58,43 @@ public class AppWidget extends AppWidgetProvider {
         }
     }
 
-    private static void renderWidgetFlow(RemoteViews views, AppWidgetManager appWidgetManager, int appWidgetId, WorkLog workLog) {
+    private static void renderWidgetFlow(Context context, RemoteViews views, AppWidgetManager appWidgetManager, int appWidgetId, WorkLog workLog) {
+        Intent startIntent = new Intent(context, CreateWorkLogIntentService.class);
+        startIntent.setAction(CreateWorkLogIntentService.ACTION_START);
+        PendingIntent startPendingIntent = PendingIntent.getService(
+                context,
+                0,
+                startIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.start_button, startPendingIntent);
+
+        Intent pauseIntent = new Intent(context, CreateWorkLogIntentService.class);
+        pauseIntent.setAction(CreateWorkLogIntentService.ACTION_PAUSE);
+        PendingIntent pausePendingIntent = PendingIntent.getService(
+                context,
+                0,
+                pauseIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.pause_button, pausePendingIntent);
+
+        Intent restartIntent = new Intent(context, CreateWorkLogIntentService.class);
+        restartIntent.setAction(CreateWorkLogIntentService.ACTION_RETURN);
+        PendingIntent restartPendingIntent = PendingIntent.getService(
+                context,
+                0,
+                restartIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.restart_button, restartPendingIntent);
+
+        Intent stopIntent = new Intent(context, CreateWorkLogIntentService.class);
+        stopIntent.setAction(CreateWorkLogIntentService.ACTION_STOP);
+        PendingIntent stopPendingIntent = PendingIntent.getService(
+                context,
+                0,
+                stopIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.stop_button, stopPendingIntent);
+
         views.setTextViewText(R.id.appwidget_text, workLog.getTask().getName());
         switch (workLog.getAction()) {
             case WorkLog.ACTION_START:
