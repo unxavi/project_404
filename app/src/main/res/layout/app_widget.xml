@@ -10,6 +10,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@string/app_icon_cd"
         android:src="@drawable/ic_time_white" />
 
     <TextView
@@ -17,9 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:maxWidth="200dp"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/appwidget_text"
+        android:maxWidth="200dp"
         android:textColor="@color/white" />
 
     <ImageButton
@@ -27,31 +28,35 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/ic_play_white" />
+        android:contentDescription="@string/start_working_cd"
+        android:src="@drawable/ic_play_white"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/pause_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/ic_pause_white" />
+        android:contentDescription="@string/pause_working_cd"
+        android:src="@drawable/ic_pause_white"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/restart_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/ic_replay_white" />
+        android:contentDescription="@string/restart_working_cd"
+        android:src="@drawable/ic_replay_white"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/stop_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/ic_stop_white" />
+        android:contentDescription="@string/stop_working_cd"
+        android:src="@drawable/ic_stop_white"
+        android:visibility="gone" />
 
 </LinearLayout>
