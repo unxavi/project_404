@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        release_signing {
+            keyAlias 'project404'
+            keyPassword 'udacity'
+            storeFile file("$rootDir/keystore.jks")
+            storePassword 'udacity'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -15,8 +23,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release_signing
         }
     }
 }
@@ -68,7 +78,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:${playServicesMaps}"
     implementation "com.squareup.picasso:picasso:${picasso}"
     implementation "org.apache.poi:poi:${poi}"
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.4"
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
