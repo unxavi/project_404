@@ -9,3 +9,4 @@
 *.apk
 google_maps_api.xml
 google-services.json
+*.jks
